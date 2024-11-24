@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name:  deamon-my-app
+  labels:
+    app: deamon
+spec:
+  selector:
+    matchLabels:
+      app: deamon-my-app
+  template:
+    metadata:
+      labels:
+        app: deamon-my-app
+    spec:
+      containers:
+          - name: multitool
+            image: wbitt/network-multitool           
+            volumeMounts:
+              - name: logpath
+                mountPath: /var/log
+      volumes:
+      - name: logpath
+        hostPath:
+          path: /var/log
