@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-my-app
+  labels:
+    app: my-app
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      volumes:
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: local-pvc
+      containers:
+        - name: multitool
+          image: wbitt/network-multitool
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - |
+              while true; do 
+              sleep 6
+              echo "Multitool read: $(tail -n 1 /output/data.txt)"
+              done
+          volumeMounts:
+            - name: my-volume
+              mountPath: /output
+        - name: busybox
+          image: busybox:1.28
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - |
+              while true; do 
+              echo "$(date) data from busybox" | tee -a /output/data.txt
+              sleep 5
+              done              
+          volumeMounts:
+            - name: my-volume
+              mountPath: /output
