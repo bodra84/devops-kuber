@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx
+data:
+  HTTP_PORT: "8080"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: index
+data:  
+  index.html: |
+    <html>
+    <body>
+      <h1>DevOps-19 Faiziev Davlat</h1>
+    </body>
+    </html>
